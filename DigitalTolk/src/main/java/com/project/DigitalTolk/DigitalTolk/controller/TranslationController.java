@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1")
@@ -44,5 +45,21 @@ public class TranslationController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         translationService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Translation>> searchTranslations(
+            @RequestParam(required = false) String key,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String content
+    ) {
+        List<Translation> results = translationService.searchTranslations(key, tag, content);
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<Map<String, Map<String, String>>> exportTranslations(@RequestParam(required = false) String locale) {
+        Map<String, Map<String, String>> result = translationService.exportGroupedByLocale(locale);
+        return ResponseEntity.ok(result);
     }
 }

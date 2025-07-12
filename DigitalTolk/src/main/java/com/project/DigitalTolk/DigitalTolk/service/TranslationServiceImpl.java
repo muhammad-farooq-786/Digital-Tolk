@@ -9,10 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +51,26 @@ public class TranslationServiceImpl implements TranslationService{
     @Override
     public void delete(String id) {
         translationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Translation> searchTranslations(String key, String tag, String content) {
+        return translationRepository.searchTranslations(key, tag, content);
+    }
+
+    @Override
+    public Map<String, Map<String, String>> exportGroupedByLocale(String locale) {
+        List<Translation> translations = (locale == null || locale.isBlank())
+                ? translationRepository.findAll()
+                : translationRepository.findByLocale(locale);
+        Map<String, Map<String, String>> grouped = new HashMap<>();
+
+        for (Translation t : translations) {
+            grouped
+                    .computeIfAbsent(t.getLocale(), l -> new HashMap<>())
+                    .put(t.getKey(), t.getContent());
+        }
+
+        return grouped;
     }
 }
