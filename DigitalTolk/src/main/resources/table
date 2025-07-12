@@ -1,0 +1,13 @@
+CREATE TABLE `translations` (
+  `id` varchar(255) NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) DEFAULT NULL,
+  `key` varchar(255) DEFAULT NULL,
+  `locale` varchar(255) DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  `updated_at` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `translations_locale_IDX` (`locale`) USING BTREE,
+  KEY `translations_key_IDX` (`key`),
+  FULLTEXT KEY `translations_tags_IDX` (`tags`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
